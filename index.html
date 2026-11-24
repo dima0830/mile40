@@ -86,7 +86,8 @@
 
   .luz { position: absolute; left: 50%; top: 52%; width: 10px; height: 10px; translate: -50% -50%; border-radius: 50%; background: radial-gradient(circle, rgba(255,240,230,1), rgba(255,215,200,.7) 40%, transparent 70%); opacity: 0; transition: width 1.4s ease .5s, height 1.4s ease .5s, opacity .6s .5s; pointer-events: none; }
   .cuarenta { position: absolute; z-index: 2; left: 0; right: 0; top: 6%; text-align: center; opacity: 0; scale: .4; transition: opacity .8s 1.1s, scale 1.2s cubic-bezier(.2,1.4,.4,1) 1.1s; pointer-events: none; }
-  .cuarenta .globo { font-size: 10rem; }
+  .cuarenta .globo { font-size: 8.5rem; text-shadow: 0 0 24px rgba(255,246,243,.95), 0 0 50px rgba(255,246,243,.7); }
+  .cuarenta { top: 9% !important; }
   .cuarenta span { text-shadow: 0 0 14px rgba(255,246,243,.95), 0 0 28px rgba(255,246,243,.8); }
   .cuarenta span { display: block; font: 400 2.6rem var(--script); color: var(--tinta); margin-top: 10px; }
 
@@ -170,10 +171,10 @@
   .musica[hidden] { display: none; }
 
   /* ===== ESTILO QUINCE AÑOS: número metálico tipo globo, tiara, mariposas, destellos, flores ===== */
-  .globo { display: block; font: 700 9.5rem/0.95 var(--serif); letter-spacing: -.02em;
-    background: linear-gradient(170deg, #f0b9be 0%, #c27482 26%, #964b5b 48%, #e4a6aa 62%, #874252 82%, #c98690 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    -webkit-text-stroke: 1px rgba(255,255,255,.45); filter: drop-shadow(0 10px 14px rgba(143,79,90,.35)); }
+  /* el 40: número en cursiva fina, un solo tono oro rosa, con líneas finas a los lados */
+  .globo { display: inline-flex; align-items: center; gap: 18px; font: italic 500 8.5rem/1 var(--serif); letter-spacing: .02em; color: #9a5563; }
+  .globo::before, .globo::after { content: ""; width: 54px; height: 1px; background: linear-gradient(90deg, transparent, #b76e79); }
+  .globo::after { background: linear-gradient(90deg, #b76e79, transparent); }
   .corona { display: block; width: 150px; margin: 0 auto -6px; filter: drop-shadow(0 4px 6px rgba(143,79,90,.3)); }
   .flores-top { position: absolute; top: -6px; left: -12%; width: 124%; max-width: none; pointer-events: none; }
   .flores-pie { display: block; width: 124%; max-width: none; margin: 30px -12% -72px; rotate: 180deg; pointer-events: none; }
@@ -227,7 +228,7 @@
       <img class="foto cerrado" src="img/regalo-cerrado.webp" alt="" />
       <div class="nombre-etiqueta"><small>Para</small><b data-apodo>Mile</b></div>
     </div>
-    <div class="cuarenta"><svg class="corona" viewBox="0 0 200 92" aria-hidden="true"><use href="#tiara" /></svg><b class="globo">40</b><span>¡Feliz cumpleaños!</span></div>
+    <div class="cuarenta"><b class="globo">40</b><span>¡Feliz cumpleaños!</span></div>
     <p class="pista">Toca tu regalo</p>
     <button class="entrar" id="entrar" type="button">Ver mi regalo</button>
   </div>
@@ -236,8 +237,7 @@
 <main class="tarjeta" id="tarjeta">
   <section class="portada" id="portada">
     <img class="flores-top" src="img/flores-arriba.webp" alt="" />
-    <svg class="corona revelar" viewBox="0 0 200 92" aria-hidden="true" style="margin-top:70px"><use href="#tiara" /></svg>
-    <p class="script feliz revelar">Feliz cumpleaños</p>
+    <p class="script feliz revelar" style="margin-top:70px">Feliz cumpleaños</p>
     <h1 class="revelar" data-nombre>Milena</h1>
     <p class="numero revelar"><b class="globo">40</b></p>
     <p class="anos revelar">años</p>
