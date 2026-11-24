@@ -218,6 +218,12 @@
 
   /* ================= CIERRE ================= */
   .cierre { min-height: 100svh; padding: 70px 26px 40px; background: url(img/cierre.webp) center bottom / cover; display: flex; flex-direction: column; justify-content: flex-start; }
+  /* difuminado: la foto aparece poco a poco desde el fondo (arriba) y se funde al final (abajo) */
+  .cierre { position: relative; }
+  .cierre::before, .cierre::after { content: ""; position: absolute; left: 0; right: 0; pointer-events: none; }
+  .cierre::before { top: 0; height: 240px; background: linear-gradient(var(--fondo) 0%, rgba(251,243,239,.85) 35%, rgba(251,243,239,0) 100%); }
+  .cierre::after { bottom: 0; height: 120px; background: linear-gradient(rgba(251,243,239,0), var(--fondo)); }
+  .cierre > * { position: relative; z-index: 1; }
   .cierre p:not(.script) { text-shadow: 0 0 12px rgba(255,248,245,.95); }
   .cierre .script { text-shadow: 0 0 18px rgba(255,248,245,.95); }
   .cierre .script { font-size: 3rem; color: var(--oro-rosa-oscuro); }
