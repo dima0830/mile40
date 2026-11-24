@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Escríbele a Mile por sus 40 💌</title>
+<meta name="description" content="Deja tu mensaje para Mile: aparecerá en su tarjeta de cumpleaños. ¡Es sorpresa!" />
+<meta property="og:title" content="Escríbele a Mile por sus 40 💌" />
+<meta property="og:description" content="Tu mensaje aparecerá en su tarjeta de cumpleaños. ¡Es sorpresa, no le cuentes!" />
+<meta name="theme-color" content="#fbf3ef" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Parisienne&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  /* PÁGINA PARA LA FAMILIA: solo el formulario. Mile ve los mensajes en su tarjeta (../). */
+  :root { --fondo: #fbf3ef; --papel: #fffaf7; --rosa: #e8b4b8; --rosa-suave: #f6dcdc; --oro-rosa: #b76e79; --oro-rosa-oscuro: #8f4f5a; --tinta: #5a3a3f; --tinta-suave: #8d6b70; --script: "Parisienne", cursive; --serif: "Cormorant Garamond", serif; --texto: "DM Sans", system-ui, sans-serif; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { min-height: 100vh; font-family: var(--texto); color: var(--tinta); background: radial-gradient(120% 60% at 50% 0%, #fde8e4 0%, var(--fondo) 55%, #f4e1dc 100%); }
+  .pagina { max-width: 480px; margin: 0 auto; padding: 56px 24px 60px; text-align: center; }
+  .sobre { font: 500 .78rem var(--texto); letter-spacing: .32em; text-transform: uppercase; color: var(--oro-rosa); }
+  h1 { margin-top: 8px; font: 400 3.2rem/1.05 var(--script); color: var(--oro-rosa-oscuro); }
+  .intro { margin-top: 12px; font: italic 500 1.2rem/1.45 var(--serif); color: var(--tinta-suave); }
+  .secreto { display: inline-block; margin-top: 16px; padding: 6px 16px; border-radius: 999px; background: var(--rosa-suave); font: 600 .85rem var(--texto); color: var(--oro-rosa-oscuro); }
+  form { margin-top: 28px; padding: 26px 22px; border-radius: 22px; background: var(--papel); text-align: left; box-shadow: 0 18px 36px -26px rgba(110,50,60,.8); }
+  label { display: block; margin-top: 14px; font: 500 .72rem var(--texto); letter-spacing: .2em; text-transform: uppercase; color: var(--oro-rosa); }
+  label:first-child { margin-top: 0; }
+  input, textarea { width: 100%; margin-top: 6px; padding: 12px 14px; border: 1px solid #ecc9c6; border-radius: 12px; background: #fff; font: 500 1.15rem var(--serif); color: var(--tinta); outline-color: var(--oro-rosa); }
+  textarea { min-height: 150px; resize: vertical; }
+  .cuenta { margin-top: 4px; text-align: right; font-size: .75rem; color: var(--tinta-suave); }
+  .boton { display: block; width: 100%; margin-top: 16px; padding: 15px; border: 0; border-radius: 999px; background: linear-gradient(110deg, #9e5a66, #d79aa1 50%, #8f4f5a); color: #fff; font: 600 1.05rem var(--texto); letter-spacing: .03em; cursor: pointer; box-shadow: 0 12px 24px -12px rgba(143,79,90,.8); }
+  .boton:disabled { opacity: .6; }
+  .estado { margin-top: 12px; min-height: 1.4em; text-align: center; font: italic 500 1.1rem var(--serif); color: var(--oro-rosa-oscuro); }
+  .gracias { margin-top: 28px; padding: 30px 22px; border-radius: 22px; background: var(--papel); box-shadow: 0 18px 36px -26px rgba(110,50,60,.8); }
+  .gracias[hidden], form[hidden] { display: none; }
+  .gracias p.grande { font: 400 2.4rem var(--script); color: var(--oro-rosa-oscuro); }
+  .gracias p { margin-top: 8px; font: italic 500 1.15rem/1.45 var(--serif); color: var(--tinta-suave); }
+  .gracias button { margin-top: 18px; padding: 12px 22px; border: 1px solid var(--rosa); border-radius: 999px; background: #fff; font: 600 .95rem var(--texto); color: var(--oro-rosa-oscuro); cursor: pointer; }
+  .cuantos { margin-top: 22px; font: italic 500 1.05rem var(--serif); color: var(--tinta-suave); }
+</style>
+</head>
+<body>
+<main class="pagina">
+  <p class="sobre">Mile cumple 40</p>
+  <h1>Escríbele a Mile</h1>
+  <p class="intro">Tu mensaje aparecerá en la tarjeta de cumpleaños que le estamos preparando.</p>
+  <p class="secreto">🤫 Es sorpresa: no le cuentes</p>
+
+  <form id="formulario">
+    <label for="quien">Tu nombre</label>
+    <input id="quien" maxlength="40" required autocomplete="name" placeholder="Ej: Tu hermana Andrea" />
+    <label for="texto">Tu mensaje para Mile</label>
+    <textarea id="texto" maxlength="500" required placeholder="Un recuerdo, un deseo, algo que la haga sonreír…"></textarea>
+    <p class="cuenta"><span id="cuenta">0</span>/500</p>
+    <button class="boton" id="enviar" type="submit">Enviar mi mensaje</button>
+    <p class="estado" id="estado" role="status"></p>
+  </form>
+
+  <div class="gracias" id="gracias" hidden>
+    <p class="grande">¡Gracias!</p>
+    <p>Tu mensaje ya está en la tarjeta de Mile. Se lo vamos a enviar hoy 💗</p>
+    <button type="button" id="otro">Escribir otro mensaje</button>
+  </div>
+
+  <p class="cuantos" id="cuantos"></p>
+</main>
+
+<script>
+  const CONFIG = {
+    evento: "mile-40", // pestaña "mile-40 · mensajes" en la hoja de Google de Innube
+    hoja: "https://script.google.com/macros/s/AKfycbz7cwgauOL6VTHYC7HZFhjc0AXrV0JWp2WH_UOiqX4ZPspk4EugmNQZG5He8qi9uIgxAA/exec",
+  };
+  const form = document.getElementById("formulario");
+  const quien = document.getElementById("quien");
+  const texto = document.getElementById("texto");
+  const estado = document.getElementById("estado");
+  const enviar = document.getElementById("enviar");
+  const gracias = document.getElementById("gracias");
+
+  texto.addEventListener("input", () => (document.getElementById("cuenta").textContent = texto.value.length));
+
+  async function contar() {
+    try {
+      const r = await fetch(`${CONFIG.hoja}?evento=${encodeURIComponent(CONFIG.evento)}&tipo=mensajes`);
+      const d = await r.json();
+      const n = d.ok ? d.filas.length : 0;
+      document.getElementById("cuantos").textContent = n ? `Ya ${n === 1 ? "le escribió 1 persona" : `le escribieron ${n} personas`} 💌` : "";
+    } catch { /* sin conexión */ }
+  }
+  contar();
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nombre = quien.value.trim();
+    const mensaje = texto.value.trim();
+    if (!nombre || !mensaje) return;
+    enviar.disabled = true;
+    estado.textContent = "Enviando…";
+    try {
+      // texto plano para evitar la consulta previa (CORS) que Apps Script no responde
+      const r = await fetch(CONFIG.hoja, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ evento: CONFIG.evento, tipo: "mensajes", fullName: nombre, message: mensaje }),
+      });
+      const res = await r.json();
+      if (!res.ok) throw new Error();
+      form.hidden = true;
+      gracias.hidden = false;
+      estado.textContent = "";
+      contar();
+    } catch {
+      estado.textContent = "No se pudo enviar. Revisa tu conexión e inténtalo otra vez.";
+    } finally {
+      enviar.disabled = false;
+    }
+  });
+
+  document.getElementById("otro").addEventListener("click", () => {
+    texto.value = "";
+    document.getElementById("cuenta").textContent = "0";
+    gracias.hidden = true;
+    form.hidden = false;
+  });
+</script>
+</body>
+</html>

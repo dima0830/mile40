@@ -124,8 +124,34 @@
   .play { position: absolute; left: 50%; top: 50%; width: 68px; height: 68px; translate: -50% -50%; border-radius: 50%; background: rgba(255,250,247,.92); box-shadow: 0 10px 20px -8px rgba(0,0,0,.5); }
   .play::after { content: ""; position: absolute; left: 54%; top: 50%; translate: -50% -50%; border-style: solid; border-width: 13px 0 13px 21px; border-color: transparent transparent transparent var(--oro-rosa-oscuro); }
 
+  /* reproductor de audio */
+  .reproductor { display: flex; align-items: center; gap: 16px; margin-top: 20px; padding: 16px 18px; border-radius: 22px; background: var(--papel); text-align: left; box-shadow: 0 16px 30px -24px rgba(110,50,60,.8); }
+  .reproductor[hidden] { display: none; }
+  .tocar { flex: none; width: 58px; height: 58px; border: 0; border-radius: 50%; background: linear-gradient(145deg, #c98690, #8f4f5a); box-shadow: 0 10px 20px -10px rgba(143,79,90,.9); cursor: pointer; position: relative; }
+  .icono-play { position: absolute; left: 54%; top: 50%; translate: -50% -50%; border-style: solid; border-width: 11px 0 11px 17px; border-color: transparent transparent transparent #fff; }
+  .tocar.sonando .icono-play { left: 50%; width: 16px; height: 20px; border: 0; border-left: 5px solid #fff; border-right: 5px solid #fff; }
+  .reproductor .info { flex: 1; min-width: 0; }
+  .reproductor .info b { display: block; font: 600 1.25rem var(--serif); color: var(--tinta); }
+  .reproductor .info span { font: italic 500 1rem var(--serif); color: var(--tinta-suave); }
+  .progreso { margin-top: 10px; height: 4px; border-radius: 4px; background: var(--rosa-suave); overflow: hidden; }
+  .progreso span { display: block; height: 100%; width: 0; background: var(--oro-rosa); }
+
   /* ================= FOTOS ================= */
   .fotos { padding-top: 40px; }
+  /* pase de diapositivas: una foto a la vez, con acercamiento lento; fondo difuminado de la misma foto */
+  .carrusel { position: relative; margin-top: 26px; aspect-ratio: 4 / 5; border-radius: 22px; overflow: hidden; background: #2b1b1e; box-shadow: 0 22px 40px -26px rgba(110,50,60,.9); outline: 6px solid var(--papel); touch-action: pan-y; }
+  .diapo { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; }
+  .diapo.activa { opacity: 1; }
+  .diapo .fondo { position: absolute; inset: -20px; width: calc(100% + 40px); height: calc(100% + 40px); object-fit: cover; filter: blur(18px) brightness(.85); }
+  .diapo .foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .diapo.activa .foto { animation: acercar 6s linear forwards; }
+  @keyframes acercar { from { scale: 1; } to { scale: 1.07; } }
+  .flecha { position: absolute; top: 0; bottom: 0; width: 30%; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .flecha.ant { left: 0; } .flecha.sig { right: 0; }
+  .contador { position: absolute; right: 12px; top: 12px; padding: 4px 12px; border-radius: 999px; background: rgba(255,250,247,.9); font: 700 .95rem var(--serif); color: var(--oro-rosa-oscuro); }
+  .barra { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255,255,255,.3); }
+  .barra span { display: block; height: 100%; width: 0; background: var(--rosa); transition: width .6s ease; }
+
   /* cuadrícula en orden (de ayer a hoy, fila por fila), cada foto con su número */
   .rejilla { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 26px; }
   .rejilla figure { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 14px; background: var(--rosa-suave); box-shadow: 0 14px 26px -18px rgba(110,50,60,.55); }
@@ -236,7 +262,6 @@
 
 <main class="tarjeta" id="tarjeta">
   <section class="portada" id="portada">
-    <img class="flores-top" src="img/flores-arriba.webp" alt="" />
     <p class="script feliz revelar" style="margin-top:70px">Feliz cumpleaños</p>
     <h1 class="revelar" data-nombre>Milena</h1>
     <p class="numero revelar"><b class="globo">40</b></p>
@@ -247,6 +272,10 @@
   <section class="cancion" id="seccion-cancion">
     <p class="script revelar" style="font-size:2.4rem;color:var(--oro-rosa-oscuro)">Tu canción</p>
     <p class="sub revelar"><b data-cancion-titulo>Creo en mí</b> · <span data-cancion-artista>Natalia Jiménez</span></p>
+    <div class="reproductor revelar" id="reproductor" hidden>
+      <button type="button" class="tocar" id="tocar" aria-label="Reproducir la canción"><span class="icono-play"></span></button>
+      <div class="info"><b data-cancion-titulo>Creo en mí</b><span data-cancion-artista>Natalia Jiménez</span><div class="progreso"><span id="progreso"></span></div></div>
+    </div>
     <div class="video revelar" id="video">
       <button type="button" class="portada-video" id="portada-video" aria-label="Reproducir la canción">
         <img id="miniatura" alt="" />
@@ -258,10 +287,15 @@
   <section class="fotos" id="seccion-fotos" hidden>
     <p class="script titulo revelar" style="font-size:2.6rem;color:var(--oro-rosa-oscuro)">40 años, 40 fotos</p>
     <p class="sub revelar">Un recorrido por tu vida, de ayer a hoy</p>
-    <div class="rejilla" id="rejilla"></div>
+    <div class="carrusel revelar" id="carrusel" aria-roledescription="carrusel" aria-label="40 fotos de Mile">
+      <div class="diapos" id="diapos"></div>
+      <button type="button" class="flecha ant" id="ant" aria-label="Foto anterior"></button>
+      <button type="button" class="flecha sig" id="sig" aria-label="Foto siguiente"></button>
+      <p class="contador"><span id="num">1</span> / <span id="total">40</span></p>
+      <div class="barra"><span id="barra"></span></div>
+    </div>
   </section>
 
-  <img class="divisor" src="img/flores-divisor.webp" alt="" />
   <section class="gustos">
     <h2 class="titulo revelar">Lo que te hace feliz</h2>
     <p class="sub revelar">y que este año no puede faltar</p>
@@ -274,28 +308,16 @@
     </div>
   </section>
 
-  <img class="divisor" src="img/flores-divisor.webp" alt="" />
   <section class="mensajes" id="mensajes">
     <h2 class="titulo revelar">Mensajes para ti</h2>
     <p class="sub revelar">de la gente que te quiere</p>
-    <div class="lista-mensajes" id="lista-mensajes"><p class="vacio">Aquí van a aparecer los mensajes de la familia…</p></div>
+    <div class="lista-mensajes" id="lista-mensajes"><p class="vacio">Tu familia te está escribiendo… vuelve en un rato 💗</p></div>
 
-    <form class="escribir revelar" id="formulario">
-      <h3>Escríbele a <span data-apodo>Mile</span></h3>
-      <label for="quien">Tu nombre</label>
-      <input id="quien" maxlength="40" required autocomplete="name" placeholder="Ej: Tu hermana Andrea" />
-      <label for="texto">Tu mensaje</label>
-      <textarea id="texto" maxlength="500" required placeholder="Escribe algo bonito para su cumpleaños…"></textarea>
-      <p class="cuenta"><span id="cuenta">0</span>/500</p>
-      <button class="boton" id="enviar" type="submit">Enviar mi mensaje</button>
-      <p class="estado" id="estado" role="status"></p>
-    </form>
   </section>
 
   <section class="cierre">
     <p class="script revelar">Te queremos, <span data-apodo>Mile</span></p>
     <p class="revelar">Que la vida te siga regalando tantos momentos felices como los que tú nos regalas.</p>
-    <img class="flores-pie" src="img/flores-abajo.webp" alt="" />
   </section>
 </main>
 
@@ -467,18 +489,32 @@
     audio.src = CONFIG.cancion;
     botonMusica.hidden = false;
   }
+  const tocar = document.getElementById("tocar");
   function reproducir() {
     if (!CONFIG.cancion) return;
-    audio.play().then(() => botonMusica.classList.add("sonando")).catch(() => {});
+    audio.play().catch(() => {});
   }
-  botonMusica.addEventListener("click", () => {
+  function alternarMusica() {
     if (audio.paused) reproducir();
-    else { audio.pause(); botonMusica.classList.remove("sonando"); }
+    else audio.pause();
+  }
+  botonMusica.addEventListener("click", alternarMusica);
+  tocar.addEventListener("click", alternarMusica);
+  audio.addEventListener("play", () => { botonMusica.classList.add("sonando"); tocar.classList.add("sonando"); });
+  audio.addEventListener("pause", () => { botonMusica.classList.remove("sonando"); tocar.classList.remove("sonando"); });
+  audio.addEventListener("timeupdate", () => {
+    if (audio.duration) document.getElementById("progreso").style.width = `${(audio.currentTime / audio.duration) * 100}%`;
   });
 
   /* ---------- tu canción (YouTube visible; arranca al abrir el regalo donde el navegador lo permite) ---------- */
   const yt = CONFIG.youtube;
-  if (yt?.id) {
+  if (CONFIG.cancion) {
+    // con mp3: reproductor de audio, sin video
+    document.getElementById("reproductor").hidden = false;
+    document.getElementById("video").hidden = true;
+    document.querySelectorAll("[data-cancion-titulo]").forEach((e) => (e.textContent = yt.titulo));
+    document.querySelectorAll("[data-cancion-artista]").forEach((e) => (e.textContent = yt.artista));
+  } else if (yt?.id) {
     document.querySelector("[data-cancion-titulo]").textContent = yt.titulo;
     document.querySelector("[data-cancion-artista]").textContent = yt.artista;
     document.getElementById("miniatura").src = `https://i.ytimg.com/vi/${yt.id}/hqdefault.jpg`;
@@ -492,16 +528,60 @@
     caja.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${yt.id}?autoplay=1&playsinline=1&rel=0" title="${yt.titulo} · ${yt.artista}" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
   }
 
-  /* ---------- fotos ---------- */
+  /* ---------- fotos: pase de diapositivas automático (también se toca a los lados o se desliza) ---------- */
   if (CONFIG.fotos.length) {
     document.getElementById("seccion-fotos").hidden = false;
-    const rejilla = document.getElementById("rejilla");
-    CONFIG.fotos.forEach(([src], i) => {
-      const f = document.createElement("figure");
-      f.className = "revelar";
-      f.innerHTML = `<img src="${src}" alt="" loading="lazy" decoding="async" /><figcaption>${i + 1}</figcaption>`;
-      rejilla.appendChild(f);
+    const diapos = document.getElementById("diapos");
+    const total = CONFIG.fotos.length;
+    document.getElementById("total").textContent = total;
+    const elementos = CONFIG.fotos.map(() => {
+      const d = document.createElement("div");
+      d.className = "diapo";
+      diapos.appendChild(d);
+      return d;
     });
+    // solo se carga la foto que se ve y la siguiente (ahorra datos)
+    const cargar = (i) => {
+      const d = elementos[(i + total) % total];
+      if (d.dataset.cargada) return;
+      const src = CONFIG.fotos[(i + total) % total][0];
+      d.innerHTML = `<img class="fondo" src="${src}" alt="" /><img class="foto" src="${src}" alt="" />`;
+      d.dataset.cargada = "1";
+    };
+    let actual = -1;
+    let reloj = null;
+    let visible = false;
+    function mostrar(i) {
+      i = (i + total) % total;
+      if (actual >= 0) elementos[actual].classList.remove("activa");
+      cargar(i); cargar(i + 1);
+      // reinicia el acercamiento de la foto que entra
+      const foto = elementos[i].querySelector(".foto");
+      if (foto) { foto.style.animation = "none"; foto.offsetWidth; foto.style.animation = ""; }
+      elementos[i].classList.add("activa");
+      actual = i;
+      document.getElementById("num").textContent = i + 1;
+      document.getElementById("barra").style.width = `${((i + 1) / total) * 100}%`;
+    }
+    function programar() {
+      clearInterval(reloj);
+      if (visible) reloj = setInterval(() => mostrar(actual + 1), 4000);
+    }
+    mostrar(0);
+    document.getElementById("sig").addEventListener("click", () => { mostrar(actual + 1); programar(); });
+    document.getElementById("ant").addEventListener("click", () => { mostrar(actual - 1); programar(); });
+    // deslizar con el dedo
+    const carrusel = document.getElementById("carrusel");
+    let inicioX = null;
+    carrusel.addEventListener("pointerdown", (e) => (inicioX = e.clientX));
+    carrusel.addEventListener("pointerup", (e) => {
+      if (inicioX === null) return;
+      const dx = e.clientX - inicioX;
+      inicioX = null;
+      if (Math.abs(dx) > 40) { mostrar(actual + (dx < 0 ? 1 : -1)); programar(); }
+    });
+    // solo avanza mientras está en pantalla
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; programar(); }, { threshold: 0.4 }).observe(carrusel);
   }
 
   /* ---------- aparecer al bajar ---------- */
@@ -543,44 +623,6 @@
   cargarMensajes();
   setInterval(cargarMensajes, 20000);
 
-  const form = document.getElementById("formulario");
-  const quien = document.getElementById("quien");
-  const texto = document.getElementById("texto");
-  const estado = document.getElementById("estado");
-  const enviar = document.getElementById("enviar");
-  texto.addEventListener("input", () => (document.getElementById("cuenta").textContent = texto.value.length));
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const nuevo = { Nombre: quien.value.trim(), Mensaje: texto.value.trim() };
-    if (!nuevo.Nombre || !nuevo.Mensaje) return;
-    enviar.disabled = true;
-    estado.textContent = "Enviando…";
-    try {
-      if (CONFIG.hoja) {
-        // texto plano para evitar la consulta previa (CORS) que Apps Script no responde
-        const r = await fetch(CONFIG.hoja, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ evento: CONFIG.evento, tipo: "mensajes", fullName: nuevo.Nombre, message: nuevo.Mensaje }),
-        });
-        const res = await r.json();
-        if (!res.ok) throw new Error();
-      } else {
-        // sin hoja configurada: se guarda solo en este celular (para probar)
-        const guardados = JSON.parse(localStorage.getItem("mensajes-prueba") || "[]");
-        guardados.push(nuevo);
-        localStorage.setItem("mensajes-prueba", JSON.stringify(guardados));
-      }
-      pintar([nuevo]);
-      form.reset();
-      document.getElementById("cuenta").textContent = "0";
-      estado.textContent = `¡Gracias! ${CONFIG.apodo} ya puede leer tu mensaje 💗`;
-    } catch {
-      estado.textContent = "No se pudo enviar. Inténtalo otra vez.";
-    } finally {
-      enviar.disabled = false;
-    }
-  });
 </script>
 </body>
 </html>
