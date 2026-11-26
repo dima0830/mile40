@@ -70,7 +70,7 @@
   @keyframes brillar-fondo { 0% { background-position: 0 0; opacity: .5; } 50% { opacity: .85; } 100% { background-position: 0 -600px; opacity: .5; } }
   .portada .invita { font: 500 .78rem var(--texto); letter-spacing: .3em; text-transform: uppercase; color: var(--oro-rosa); text-shadow: 0 0 10px rgba(255,248,245,.9); }
   .portada .quien { margin-top: 8px; font: italic 500 1.3rem var(--serif); color: var(--tinta-suave); text-shadow: 0 0 12px rgba(255,248,245,.9); }
-  .portada .celebrar { margin-top: 18px; font: 400 2.5rem/1 var(--script); color: var(--oro-rosa-oscuro); text-shadow: 0 0 14px rgba(255,248,245,.95); }
+  .portada .celebrar { margin-top: 0; font: 400 2.5rem/1 var(--script); color: var(--oro-rosa-oscuro); text-shadow: 0 0 14px rgba(255,248,245,.95); }
   .portada h1 { margin-top: 4px; font: 700 3.8rem/1 var(--serif); letter-spacing: .02em; color: var(--tinta); text-shadow: 0 0 14px rgba(255,248,245,.9); }
   .portada .globos { width: 74%; height: auto; margin-top: 8px; filter: drop-shadow(0 22px 22px rgba(143,79,90,.28)); animation: flotar-globos 5s ease-in-out infinite; }
   .portada .cuando { margin-top: 14px; font: 600 1.35rem/1.35 var(--serif); color: var(--tinta); text-shadow: 0 0 12px rgba(255,248,245,.95); }
@@ -129,6 +129,8 @@
   .cierre > * { position: relative; z-index: 1; }
   .cierre .script { font-size: 3rem; color: var(--oro-rosa-oscuro); text-shadow: 0 0 18px rgba(255,248,245,.95); }
   .cierre p:not(.script) { margin-top: 8px; font: italic 500 1.2rem var(--serif); color: var(--tinta-suave); text-shadow: 0 0 12px rgba(255,248,245,.95); }
+  .invita-final { padding: 10px 24px 6px; text-align: center; font: 400 2.5rem/1.1 var(--script); color: var(--oro-rosa-oscuro); }
+  .invita-final small { display: block; margin-bottom: 4px; font: 500 .72rem var(--texto); letter-spacing: .26em; text-transform: uppercase; color: var(--oro-rosa); }
   .firma { padding: 18px 20px 28px; text-align: center; font: 500 .78rem var(--texto); color: var(--tinta-suave); }
   .firma a { color: var(--oro-rosa-oscuro); }
 
@@ -176,9 +178,7 @@
 <main class="tarjeta" id="tarjeta">
   <section class="portada" id="portada">
     <div class="brillos" aria-hidden="true"></div>
-    <p class="invita revelar">Te invita</p>
-    <p class="quien revelar" data-anfitrion>Fabián Villarreal</p>
-    <p class="celebrar revelar">a celebrar los 40 de</p>
+    <p class="celebrar revelar">Vamos a celebrar<br />los 40 de</p>
     <h1 class="revelar" data-apodo>Mile</h1>
     <img class="globos revelar" src="../img/globos-40.webp" alt="40" width="730" height="506" />
     <p class="cuando revelar"><span data-dia></span><b data-hora></b></p>
@@ -239,6 +239,8 @@
     <p class="script revelar">¡Te esperamos!</p>
     <p class="revelar">Tu compañía es el mejor regalo para <span data-apodo>Mile</span>.</p>
   </section>
+
+  <p class="invita-final revelar"><small>Con cariño, te invita</small><span data-anfitrion>Fabián Villarreal</span></p>
 
   <p class="firma">Hecha con 💗 por <a href="https://innube.online/invitaciones/" target="_blank" rel="noopener">Innube</a></p>
 </main>
@@ -390,7 +392,7 @@
   const portada = document.getElementById("portada");
   destellos(portada, 14);
   destellos(document.getElementById("entrada"), 16);
-  [[10, 30], [78, 20], [84, 64]].forEach(([x, y], i) => {
+  [[6, 60], [80, 6], [84, 70]].forEach(([x, y], i) => {
     const m = mariposa("flota");
     m.style.left = `${x}%`;
     m.style.top = `${y}%`;
