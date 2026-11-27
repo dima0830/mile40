@@ -56,6 +56,8 @@
   .entrada.fuera { opacity: 0; pointer-events: none; }
   .entrada .contenido { position: relative; z-index: 2; width: min(100%, 480px); padding: 0 30px; text-align: center; }
   .entrada small { display: block; font: 500 .78rem var(--texto); letter-spacing: .32em; text-transform: uppercase; color: var(--oro-rosa); }
+  .entrada .invitado { margin-top: 10px; font: 600 2rem/1.15 var(--serif); color: var(--tinta); text-wrap: balance; }
+  .entrada .invitado + .para { margin-top: 10px; font-size: 2.6rem; }
   .entrada .para { margin-top: 18px; font: 400 3.4rem/1 var(--script); color: var(--oro-rosa-oscuro); }
   .entrada .globos { width: 70%; height: auto; margin: 14px auto 0; filter: drop-shadow(0 22px 22px rgba(143,79,90,.28)); animation: flotar-globos 5s ease-in-out infinite; }
   .entrada p { margin-top: 14px; font: italic 500 1.25rem/1.4 var(--serif); color: var(--tinta-suave); }
@@ -168,7 +170,8 @@
 <!-- ENTRADA: toca para abrir (así también arranca la música en el celular) -->
 <div class="entrada" id="entrada">
   <div class="contenido">
-    <small>Tienes una invitación</small>
+    <small id="saludo-entrada">Tienes una invitación</small>
+    <p class="invitado" id="invitado" hidden></p>
     <p class="para">Los 40 de Mile</p>
     <img class="globos" src="../img/globos-40.webp" alt="40" width="730" height="506" />
     <p>Una noche para celebrarla</p>
@@ -285,6 +288,31 @@
 
   const poner = (sel, txt) => document.querySelectorAll(sel).forEach((e) => (e.textContent = txt));
   poner("[data-apodo]", CONFIG.apodo);
+
+  /* ---------- nombre del invitado, desde el enlace ----------
+     Formas válidas:  ?ana-y-pedro   ·   ?para=Ana y Pedro
+     El guion se vuelve espacio y cada palabra va con mayúscula (menos "y", "de", "la"…). */
+  function nombreDelEnlace() {
+    const q = new URLSearchParams(location.search);
+    let crudo = q.get("para");
+    if (!crudo) {
+      const primero = location.search.slice(1).split("&")[0];
+      if (primero && !primero.includes("=")) crudo = decodeURIComponent(primero).replace(/-/g, " ");
+    }
+    if (!crudo) return "";
+    const minusculas = ["y", "e", "de", "del", "la", "las", "los", "familia"];
+    return crudo.trim().replace(/\s+/g, " ").slice(0, 60).split(" ")
+      .map((p, i) => (i > 0 && minusculas.includes(p.toLowerCase()) ? p.toLowerCase() : p.charAt(0).toUpperCase() + p.slice(1)))
+      .join(" ");
+  }
+  const invitado = nombreDelEnlace();
+  if (invitado) {
+    document.getElementById("saludo-entrada").textContent = "Una invitación especial para";
+    const el = document.getElementById("invitado");
+    el.textContent = invitado;
+    el.hidden = false;
+    document.title = `${invitado}: los 40 de ${CONFIG.apodo} 🥂`;
+  }
   poner("[data-anfitrion]", CONFIG.anfitrion);
   poner("[data-dia]", CONFIG.dia);
   poner("[data-hora]", CONFIG.hora);
